@@ -1,52 +1,258 @@
-# 🤖 JARVIS - Voice-Controlled AI Assistant (v4.0)
+# 🤖 JARVIS v4.0 - Always Listening Voice AI Assistant
 
-> **Production-Ready Voice AI with Free LLM Support**  
-> **Status**: ✅ Fully Implemented | **Uses**: Python 3.14 | **OS**: Windows
-
----
-
-## 📖 TABLE OF CONTENTS
-
-1. [Quick Start (5 Minutes)](#-quick-start-5-minutes)
-2. [Project Overview](#-project-overview)
-3. [Installation & Setup](#️-installation--setup)
-4. [Free AI Options](#-free-ai-options)
-5. [Voice Commands Reference](#-voice-commands-reference)
-6. [System Control Features](#-system-control-features)
-7. [Advanced Features](#-advanced-features)
-8. [Troubleshooting](#-troubleshooting)
+> **Production-Ready Continuous Voice AI**  
+> **Status**: ✅ Fully Operational | **Python**: 3.13+ | **OS**: Windows  
+> **LLM**: Groq (Free tier) | **Speech**: Web Speech API + pyttsx3 | **Architecture**: FastAPI + WebSocket
 
 ---
 
-## ⚡ Quick Start (5 Minutes)
+## 📋 FEATURES
 
-### Option 1: No AI Mode (Zero Setup)
+✅ **Always Listening** - Continuous speech recognition without repeated clicks  
+✅ **Natural Language Understanding** - Groq mixtral-8x7b-32768 LLM parsing  
+✅ **Real-time Responses** - Instant command execution with voice feedback  
+✅ **System Control** - Open apps, search web, navigate URLs, get system info  
+✅ **Persistent Memory** - SQLite conversation history  
+✅ **Multi-Browser Support** - Chrome, Firefox, Edge  
+✅ **Production Ready** - Comprehensive error handling and logging  
+
+---
+
+## 🚀 QUICK START (3 Steps)
+
+### 1. Get Free Groq API Key
 ```bash
-cd c:\Users\hp\Desktop\New folder (2)\jarvis_ai
-python -m venv venv
+# Visit: https://console.groq.com (sign up, copy API key)
+```
+
+### 2. Setup & Run
+```bash
+cd "c:\Users\hp\Desktop\New folder (2)\jarvis_ai"
 venv\Scripts\activate
 pip install -r requirements.txt
-python main.py
-# Choose: 1 (text commands) → Type: "search python"
+
+# Set Groq API key (Windows PowerShell):
+$env:GROQ_API_KEY = "your_groq_api_key_here"
+
+# Start servers (two terminals):
+# Terminal 1:
+python -m http.server 9000
+
+# Terminal 2:
+python jarvis_core.py
 ```
 
-### Option 2: With Free Groq API (Recommended)
+### 3. Open & Use
+- **URL**: http://localhost:9000/jarvis.html
+- **Allow** microphone access when prompted
+- **Click** 🎤 or press `SPACEBAR` to listen
+- **Speak** commands like:
+  - "What time is it?"
+  - "Open Chrome"
+  - "Search Python"
+  - "Show me GitHub"
+
+---
+
+## 📖 AVAILABLE COMMANDS
+
+### Info Queries
+- "What time is it?" → Current time
+- "What's the date?" → Current date
+- "Version" → System info
+
+### Web Search
+- "Search Python" → Google search
+- "Find machine learning" → Google search
+
+### Open Apps
+- "Open Chrome" → Launch Google Chrome
+- "Open Visual Studio Code" → Launch VS Code
+- "Open Calculator" → Open Windows Calculator
+
+### Open Websites  
+- "Go to GitHub" → Opens github.com (600+ sites supported)
+- "Show me YouTube" → Opens youtube.com
+- "Open LinkedIn" → Opens linkedin.com
+
+### System Control
+- "Stop" / "Exit" → Stop listening
+
+---
+
+## 🛠️ INSTALLATION GUIDE
+
+### Requirements
+- Python 3.13+
+- Windows OS
+- 4GB+ RAM
+- Internet connection (for Groq API & web searches)
+
+### Step-by-Step
+
 ```bash
-# 1. Get free API key: https://console.groq.com (2 min)
-# 2. Add to config.py: USE_GROQ = True & GROQ_API_KEY = "your_key"
-# 3. Run:
-python main.py
-# Choose: 2 (voice mode) → Speak: "search artificial intelligence"
+# 1. Clone or navigate to project
+cd "c:\Users\hp\Desktop\New folder (2)\jarvis_ai"
+
+# 2. Create virtual environment
+python -m venv venv
+
+# 3. Activate venv
+venv\Scripts\activate
+
+# 4. Install dependencies
+pip install -r requirements.txt
+
+# 5. Configure Groq API
+# Get key from: https://console.groq.com
+# Then set environment variable:
+$env:GROQ_API_KEY = "your_key_here"
+
+# 6. Start HTTP server (Terminal 1)
+python -m http.server 9000
+
+# 7. Start JARVIS Core (Terminal 2)
+python jarvis_core.py
+
+# 8. Open browser
+# http://localhost:9000/jarvis.html
 ```
 
-### Option 3: With Ollama (Offline AI)
-```bash
-# 1. Download: https://ollama.ai
-# 2. Run: ollama serve (in separate terminal)
-# 3. Download model: ollama pull mistral
-# 4. Edit config.py: USE_OLLAMA = True
-# 5. Run: python main.py
+---
+
+## ⚙️ PROJECT STRUCTURE
+
 ```
+jarvis_ai/
+├── jarvis_core.py            # Main FastAPI server with WebSocket
+├── jarvis.html               # Professional web UI
+├── config.py                 # Configuration settings
+├── requirements.txt          # Python dependencies
+├── brain/                    # Core AI modules
+│   ├── agent.py
+│   ├── smart_agent.py
+│   └── memory.py
+├── tools/                    # System control tools
+│   ├── system_control.py
+│   ├── task_manager.py
+│   └── advanced_executor.py
+└── voice/                    # Voice processing
+    ├── speak.py
+    ├── listen.py
+    └── voice_commands.py
+```
+
+---
+
+## 🔧 TROUBLESHOOTING
+
+### Issue: "Connected" but no response
+**Solution**: 
+- Hard refresh browser: `Ctrl+Shift+R`
+- Check browser console: `F12` → Console tab
+- Verify Groq API key is set
+
+### Issue: Microphone "not-allowed" error
+**Solution**:
+- Chrome: Settings → Privacy → Microphone → Allow localhost:9000
+- Firefox: Allow when prompted
+- Edge: Settings → Privacy → Microphone → Allow
+
+### Issue: Port already in use
+**Solution**:
+```bash
+# Kill all Python processes
+Get-Process python -ErrorAction SilentlyContinue | Stop-Process -Force
+# Then restart servers
+```
+
+### Issue: Groq API errors
+**Solution**:
+- Verify API key: https://console.groq.com
+- Check internet connection
+- Ensure key is set: `$env:GROQ_API_KEY`
+
+---
+
+## 🚀 DEPLOYMENT
+
+### Simple Deployment Script
+```bash
+# save as start_jarvis.bat
+@echo off
+cd /d "c:\Users\hp\Desktop\New folder (2)\jarvis_ai"
+set GROQ_API_KEY=your_key_here
+start cmd /k "python -m http.server 9000"
+start cmd /k "venv\Scripts\python jarvis_core.py"
+start http://localhost:9000/jarvis.html
+```
+
+---
+
+## 📊 SYSTEM ARCHITECTURE
+
+**Frontend** → Web Speech API (browser microphone)  
+↓  
+**Transport** → WebSocket (ws://localhost:8000/ws)  
+↓  
+**Backend** → FastAPI + Uvicorn (jarvis_core.py)  
+↓  
+**LLM** → Groq API (mixtral-8x7b-32768)  
+↓  
+**Execution** → System commands, web search, app launch  
+↓  
+**Response** → pyttsx3 TTS back to browser  
+
+---
+
+## 📝 CONFIGURATION
+
+Edit `config.py`:
+```python
+# Groq API configuration
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+GROQ_MODEL = "mixtral-8x7b-32768"
+
+# Server ports
+HTTP_PORT = 9000
+WS_PORT = 8000
+
+# Voice settings
+VOICE_RATE = 150  # Words per minute
+VOICE_VOLUME = 1.0  # 0.0 to 1.0
+```
+
+---
+
+## 🐛 DEBUG MODE
+
+```bash
+# Run with debug output
+python -c "import logging; logging.basicConfig(level=logging.DEBUG)"
+python jarvis_core.py
+```
+
+---
+
+## 📄 LICENSE & CREDITS
+
+- **LLM**: Groq API (Free tier)
+- **Speech Recognition**: Web Speech API
+- **TTS**: pyttsx3
+- **Backend**: FastAPI + Uvicorn
+- **Author**: JARVIS Project
+
+---
+
+## 🤝 SUPPORT
+
+- **Issues**: Check browser console (F12)
+- **API Status**: https://status.groq.com
+- **Groq Docs**: https://console.groq.com/docs
+
+---
+
+**Made with ❤️ | Always Listening, Always Ready**
 
 ---
 

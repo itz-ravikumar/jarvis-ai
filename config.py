@@ -7,8 +7,9 @@ import os
 
 # Option 1: Groq API (FREE - Recommended) ⭐
 # Sign up: https://console.groq.com
+# Set env var: $env:GROQ_API_KEY = "your_key_here"
 USE_GROQ = True  # ✅ PRODUCTION: Enabled for intelligence
-GROQ_API_KEY = os.getenv("GROQ_API_KEY", "gsk_your_api_key_here")  # Add your key here
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")  # Required: Set GROQ_API_KEY environment variable
 
 # Option 2: OpenAI API (PAID - Optional)
 USE_OPENAI = False

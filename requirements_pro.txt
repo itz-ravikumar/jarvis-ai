@@ -1,0 +1,53 @@
+# JARVIS Pro - Production Voice Assistant
+# Requirements for all components
+
+# ===== Core Framework =====
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+
+# ===== Speech & Audio =====
+SpeechRecognition==3.10.0
+pyttsx3==2.90
+pyaudio==0.2.13
+
+# ===== Browser Automation =====
+selenium==4.15.2
+
+# ===== NLP & LLM =====
+groq==0.4.2
+langchain==0.1.0
+
+# ===== Data Processing =====
+numpy==1.26.2
+scipy==1.11.4
+
+# ===== System Control =====
+pyautogui==0.9.53
+psutil==5.9.6
+Pillow==10.1.0
+
+# ===== Database =====
+# SQLite3 is built-in to Python
+
+# ===== Utilities =====
+requests==2.31.0
+python-dotenv==1.0.0
+colorama==0.4.6  # For colored terminal output
+
+# ===== Development (Optional) =====
+# pytest==7.4.3
+# pytest-asyncio==0.21.1
+# black==23.12.0
+# flake8==6.1.0
+
+# ===== Installation Instructions =====
+# pip install -r requirements_pro.txt
+# 
+# For Windows with audio issues:
+# pip install pipwin
+# pipwin install pyaudio
+#
+# For Chrome automation (optional):
+# Download ChromeDriver: https://chromedriver.chromium.org/
+# Add to PATH or specify path in code

@@ -1,0 +1,38 @@
+# JARVIS Pro - Core Production Requirements (Without pyaudio conflicts)
+
+# ===== Core Framework =====
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+
+# ===== Speech & Audio =====
+SpeechRecognition==3.10.0
+pyttsx3==2.90
+
+# ===== NLP & LLM =====
+groq==0.4.2
+
+# ===== System Control =====
+pyautogui==0.9.53
+psutil==5.9.6
+
+# ===== Utilities =====
+requests==2.31.0
+python-dotenv==1.0.0
+colorama==0.4.6
+
+# ===== Optional for Advanced Features =====
+# selenium==4.15.2  # For advanced browser automation
+# langchain==0.1.0  # For LangChain integration
+
+# ===== Installation Notes =====
+# For Windows audio support:
+# - pyttsx3 works with Windows SAPI (built-in)
+# - PyAudio is optional (Web Speech API doesn't need it)
+#
+# If you need PyAudio for advanced audio processing:
+# Option 1: pip install pipwin && pipwin install pyaudio
+# Option 2: Use conda-forge: conda install pyaudio
+# Option 3: Use pre-built wheel from GitHub
+#
+# The system works fine without PyAudio - it uses Web Speech API instead

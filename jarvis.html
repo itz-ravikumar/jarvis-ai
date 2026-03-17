@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS - Always Listening</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            color: #999;
+            margin-bottom: 30px;
+            font-size: 1em;
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .status-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .status-item.success {
+            border-left-color: #28a745;
+            background: #d4edda;
+        }
+        
+        .status-item.warning {
+            border-left-color: #ffc107;
+            background: #fff3cd;
+        }
+        
+        .status-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        
+        .status-value {
+            color: #333;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        .mic-button {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-size: 3em;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            margin: 30px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .mic-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+        
+        .mic-button:active {
+            transform: scale(0.95);
+        }
+        
+        .mic-button.listening {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 10px 30px rgba(40, 167, 69, 0.4); }
+            50% { box-shadow: 0 10px 50px rgba(40, 167, 69, 0.8); }
+        }
+        
+        .transcript {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            max-height: 200px;
+            overflow-y: auto;
+            text-align: left;
+            font-size: 0.95em;
+            color: #333;
+            min-height: 60px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .transcript-empty {
+            color: #999;
+            font-style: italic;
+        }
+        
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        .message.user {
+            background: #667eea;
+            color: white;
+            text-align: right;
+        }
+        
+        .message.system {
+            background: #e8f5e9;
+            color: #2e7d32;
+            text-align: left;
+        }
+        
+        .message.error {
+            background: #ffebee;
+            color: #c62828;
+            text-align: left;
+        }
+        
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #667eea;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+        
+        button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+        
+        .stat-box {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .stat-label {
+            color: #999;
+            font-size: 0.8em;
+        }
+        
+        .stat-value {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+        
+        .connection-status {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ccc;
+            margin-right: 8px;
+            animation: none;
+        }
+        
+        .connection-status.connected {
+            background: #28a745;
+            animation: connectionPulse 2s infinite;
+        }
+        
+        @keyframes connectionPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .keyboard-hint {
+            font-size: 0.8em;
+            color: #999;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 JARVIS</h1>
+        <p class="subtitle">Always Listening AI Assistant</p>
+        
+        <!-- Connection Status -->
+        <div class="status-grid">
+            <div class="status-item success" id="connectionStatus">
+                <div class="status-label">
+                    <span class="connection-status"></span>Connection
+                </div>
+                <div class="status-value">Disconnected</div>
+            </div>
+            
+            <div class="status-item" id="listeningStatus">
+                <div class="status-label">🎧 Listening</div>
+                <div class="status-value">Off</div>
+            </div>
+        </div>
+        
+        <!-- Microphone Button -->
+        <button class="mic-button" id="micButton" title="Click to start listening (Space key works too)">
+            🎤
+        </button>
+        
+        <!-- Transcript Display -->
+        <div class="transcript" id="transcript">
+            <div class="transcript-empty">Transcript will appear here...</div>
+        </div>
+        
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-label">Commands</div>
+                <div class="stat-value" id="CommandCount">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Success</div>
+                <div class="stat-value" id="successRate">0%</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Last Response</div>
+                <div class="stat-value" id="lastResponse" style="font-size: 0.9em;">Ready</div>
+            </div>
+        </div>
+        
+        <!-- Control Buttons -->
+        <div class="control-buttons">
+            <button id="clearBtn">Clear History</button>
+            <button id="statusBtn">Status</button>
+        </div>
+        
+        <!-- Keyboard Hint -->
+        <div class="keyboard-hint">
+            💡 Press SPACEBAR to toggle mic | Say "stop" to quit listening
+        </div>
+    </div>
+
+    <script>
+        // ============ CONFIG ============
+        const CONFIG = {
+            WS_URL: "ws://localhost:8000/ws",
+            STATUS_URL: "http://localhost:8000/status",
+            MEMORY_URL: "http://localhost:8000/memory"
+        };
+
+        // ============ STATE ============
+        let connected = false;
+        let listening = false;
+        let ws = null;
+        let recognition = null;
+        let isFinal = false;
+
+        // ============ UI UPDATES ============
+        function updateConnectionStatus() {
+            const statusDiv = document.getElementById("connectionStatus");
+            const statusValue = statusDiv.querySelector(".status-value");
+            const dot = statusDiv.querySelector(".connection-status");
+            
+            if (connected) {
+                statusDiv.classList.add("success");
+                statusValue.textContent = "Connected";
+                dot.classList.add("connected");
+            } else {
+                statusDiv.classList.remove("success");
+                statusValue.textContent = "Disconnected";
+                dot.classList.remove("connected");
+            }
+        }
+
+        function updateListeningStatus() {
+            const statusDiv = document.getElementById("listeningStatus");
+            const statusValue = statusDiv.querySelector(".status-value");
+            const micButton = document.getElementById("micButton");
+            
+            if (listening) {
+                statusDiv.classList.add("success");
+                statusValue.textContent = "On";
+                micButton.classList.add("listening");
+                micButton.textContent = "🛑";
+            } else {
+                statusDiv.classList.remove("success");
+                statusValue.textContent = "Off";
+                micButton.classList.remove("listening");
+                micButton.textContent = "🎤";
+            }
+        }
+
+        function addTranscriptMessage(text, type = "user") {
+            const transcript = document.getElementById("transcript");
+            
+            // Clear empty message
+            if (transcript.querySelector(".transcript-empty")) {
+                transcript.innerHTML = "";
+            }
+            
+            const msg = document.createElement("div");
+            msg.className = `message ${type}`;
+            msg.textContent = text;
+            transcript.appendChild(msg);
+            transcript.scrollTop = transcript.scrollHeight;
+        }
+
+        function updateStats(status) {
+            document.getElementById("CommandCount").textContent = status.commands_processed || 0;
+            const rate = status.success_rate || "0%";
+            document.getElementById("successRate").textContent = rate;
+        }
+
+        // ============ WEBSOCKET ============
+        let reconnectAttempts = 0;
+        const MAX_RECONNECT_ATTEMPTS = 5;
+        const RECONNECT_DELAY = 2000;
+        
+        function connectWebSocket() {
+            if (!CONFIG.WS_URL) {
+                console.error("WebSocket URL not configured");
+                return;
+            }
+            
+            console.log(`🔌 Connecting to ${CONFIG.WS_URL} (attempt ${reconnectAttempts + 1}/${MAX_RECONNECT_ATTEMPTS})`);
+            
+            try {
+                ws = new WebSocket(CONFIG.WS_URL);
+                
+                ws.onopen = () => {
+                    console.log("✅ WebSocket connected");
+                    connected = true;
+                    reconnectAttempts = 0;
+                    updateConnectionStatus();
+                    addTranscriptMessage("🟢 Connected to JARVIS", "system");
+                };
+                
+                ws.onmessage = (event) => {
+                    try {
+                        console.log("📨 Raw message:", event.data.substring(0, 100));
+                        const data = JSON.parse(event.data);
+                        console.log("📥 Parsed:", data);
+                        
+                        if (data.type === "status") {
+                            console.log("Status:", data.message);
+                            if (data.message && data.message !== "Connected") {
+                                addTranscriptMessage(`ℹ️ ${data.message}`, "system");
+                            }
+                        }
+                        
+                        if (data.type === "result") {
+                            if (data.success) {
+                                addTranscriptMessage(`✅ ${data.response}`, "system");
+                                document.getElementById("lastResponse").textContent = "✅ Success";
+                            } else {
+                                addTranscriptMessage(`❌ ${data.response}`, "error");
+                                document.getElementById("lastResponse").textContent = "❌ Failed";
+                            }
+                            fetchStatus();
+                        }
+                        
+                        if (data.type === "error") {
+                            addTranscriptMessage(`⚠️ ${data.message}`, "error");
+                        }
+                    } catch (e) {
+                        console.error("Message parse error:", e, "Data:", event.data);
+                    }
+                };
+                
+                ws.onerror = (event) => {
+                    console.error("WebSocket error (onerror):", event);
+                    connected = false;
+                    updateConnectionStatus();
+                };
+                
+                ws.onclose = (event) => {
+                    console.log(`🔌 WebSocket closed. Code: ${event.code}, Reason: ${event.reason}`);
+                    connected = false;
+                    listening = false;
+                    updateConnectionStatus();
+                    updateListeningStatus();
+                    addTranscriptMessage("🔴 Disconnected from JARVIS", "error");
+                    
+                    // Retry connection
+                    if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+                        reconnectAttempts++;
+                        const delay = RECONNECT_DELAY * Math.pow(1.5, reconnectAttempts - 1);
+                        console.log(`↻ Retrying in ${delay}ms...`);
+                        setTimeout(connectWebSocket, delay);
+                    } else {
+                        addTranscriptMessage("⚠️ Max reconnect attempts reached", "error");
+                    }
+                };
+            } catch (error) {
+                console.error("Connection error:", error);
+                addTranscriptMessage(`Connection error: ${error.message}`, "error");
+            }
+        }
+
+        // ============ SPEECH RECOGNITION ============
+        function initSpeechRecognition() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            
+            if (!SpeechRecognition) {
+                alert("Speech Recognition not supported in this browser. Use Chrome, Edge, or Safari.");
+                return;
+            }
+            
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = "en-US";
+            
+            recognition.onstart = () => {
+                console.log("🎤 Recording started");
+                listening = true;
+                updateListeningStatus();
+            };
+            
+            recognition.onresult = (event) => {
+                let interimTranscript = "";
+                
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcript = event.results[i][0].transcript;
+                    
+                    if (event.results[i].isFinal) {
+                        isFinal = true;
+                        console.log("✅ Final:", transcript);
+                        addTranscriptMessage(`👤 ${transcript}`, "user");
+                        
+                        // Send to JARVIS
+                        sendCommand(transcript);
+                    } else {
+                        interimTranscript += transcript;
+                        console.log("⏳ Interim:", interimTranscript);
+                    }
+                }
+            };
+            
+            recognition.onerror = (event) => {
+                console.error("🎙️ Speech recognition error:", event.error);
+                console.log("Full error event:", event);
+                
+                let errorMsg = `Speech recognition error: ${event.error}`;
+                
+                // Map common errors
+                if (event.error === "not-allowed") {
+                    errorMsg = "🔒 Microphone access denied. Check browser permissions.";
+                } else if (event.error === "network") {
+                    errorMsg = "🌐 Network error. Check internet connection.";
+                } else if (event.error === "no-speech") {
+                    errorMsg = "🔇 No speech detected. Try again.";
+                }
+                
+                addTranscriptMessage(`⚠️ ${errorMsg}`, "error");
+                listening = false;
+                updateListeningStatus();
+            };
+            
+            recognition.onend = () => {
+                console.log("🎤 Recording stopped");
+                isFinal = false;
+            };
+        }
+
+        // ============ CONTROLS ============
+        function toggleListening() {
+            if (!recognition) {
+                addTranscriptMessage("⚠️ Speech recognition not available in this browser", "error");
+                return;
+            }
+            
+            if (!connected) {
+                addTranscriptMessage("⚠️ Waiting for WebSocket connection... Try again in a moment", "error");
+                return;
+            }
+            
+            if (listening) {
+                recognition.stop();
+                listening = false;
+                addTranscriptMessage("🛑 Stopped listening", "system");
+            } else {
+                recognition.start();
+                listening = true;
+                addTranscriptMessage("🎤 Listening started...", "system");
+            }
+            
+            updateListeningStatus();
+        }
+
+        function sendCommand(command) {
+            console.log("🔍 sendCommand called with:", command);
+            console.log("📊 WebSocket state:", ws?.readyState, "(0=connecting, 1=open, 2=closing, 3=closed)");
+            
+            if (!ws) {
+                console.error("❌ WebSocket not initialized");
+                addTranscriptMessage("❌ WebSocket not initialized", "error");
+                return false;
+            }
+            
+            console.log("✓ WebSocket exists");
+            
+            if (ws.readyState !== WebSocket.OPEN) {
+                console.error("❌ WebSocket not OPEN. Current state:", ws.readyState);
+                addTranscriptMessage("⚠️ WebSocket not ready (reconnecting...)", "error");
+                return false;
+            }
+            
+            console.log("✓ WebSocket is OPEN");
+            
+            try {
+                const msg = JSON.stringify({
+                    type: "command",
+                    command: command
+                });
+                console.log("📤 Attempting to send:", msg);
+                ws.send(msg);
+                console.log("✅ Message sent successfully!");
+                return true;
+            } catch (e) {
+                console.error("❌ Send error:", e.message, e);
+                addTranscriptMessage(`Send error: ${e.message}`, "error");
+                return false;
+            }
+        }
+
+        function fetchStatus() {
+            fetch(CONFIG.STATUS_URL)
+                .then(r => r.json())
+                .then(data => updateStats(data))
+                .catch(e => console.error("Status fetch error:", e));
+        }
+
+        // ============ EVENT LISTENERS ============
+        document.getElementById("micButton").addEventListener("click", toggleListening);
+        
+        document.getElementById("clearBtn").addEventListener("click", () => {
+            const transcript = document.getElementById("transcript");
+            transcript.innerHTML = '<div class="transcript-empty">Transcript cleared</div>';
+        });
+        
+        document.getElementById("statusBtn").addEventListener("click", () => {
+            fetch(CONFIG.STATUS_URL)
+                .then(r => r.json())
+                .then(data => {
+                    alert(`JARVIS Status:\n\n` +
+                        `Status: ${data.status}\n` +
+                        `Commands: ${data.commands_processed}\n` +
+                        `Success Rate: ${data.success_rate}\n` +
+                        `Groq LLM: ${data.groq_available ? 'Yes' : 'No'}\n` +
+                        `Text-to-Speech: ${data.tts_available ? 'Yes' : 'No'}`);
+                })
+                .catch(e => alert("Error fetching status"));
+        });
+        
+        // Spacebar to toggle
+        document.addEventListener("keydown", (e) => {
+            if (e.code === "Space" && e.target === document.body) {
+                e.preventDefault();
+                toggleListening();
+            }
+            if (e.key.toLowerCase() === "s" && e.ctrlKey === false) {
+                recognition && recognition.stop();
+                listening = false;
+                updateListeningStatus();
+            }
+        });
+        
+        // ============ INITIALIZE ============
+        initSpeechRecognition();
+        connectWebSocket();
+        
+        // Update stats periodically
+        setInterval(fetchStatus, 2000);
+    </script>
+</body>
+</html>
