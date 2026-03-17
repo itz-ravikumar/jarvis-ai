@@ -29,38 +29,39 @@ import threading
 
 def display_welcome():
     """Display welcome message"""
-    print("\n" + "="*60)
-    print(f"[AI] Welcome to {ASSISTANT_NAME} AI Assistant - PRODUCTION")
-    print("="*60)
-    print("[MAIN MENU]")
+    print("\n" + "="*70)
+    print(f"[AI] Welcome to {ASSISTANT_NAME} AI Assistant - PRODUCTION v4.0")
+    print("="*70)
+    print("[MAIN MENU - Core Features]")
     print("   1. Text commands (type commands)")
     print("   2. Voice mode (interactive menu)")
     print("   3. Quick voice (single command)")
     print("   4. Conversation mode (back & forth talking) ⭐")
-    print("   5. Siri mode (always-listening)")
-    print("   6. Wake word mode (say 'Hey Jarvis') 🔥")
+    print("   5. Always-listening mode (Siri-like)")
+    print("   6. Wake word mode (Say 'Hey Jarvis') 🔥")
     print("   7. Smart agent mode (multi-step tasks)")
+    print("\n[PRODUCTION FEATURES - NEW!] 🚀")
+    print("   11. Continuous hands-free mode (Siri-level)")
+    print("   12. Hybrid smart execution (AI + commands)")
+    print("   13. REST API server (control from mobile)")
+    print("   14. Telegram bot interface (control from phone)")
+    print("   15. Start background service (auto-start)")
+    print("   16. Floating GUI (Siri-style window)")
+    print("\n[UTILITIES]")
     print("   8. Show all commands")
-    print("   9. Settings")
-    print("   10. Exit")
-    print("="*60)
-    print("\n[NEW FEATURES]")
+    print("   9. Show memory/preferences")
+    print("   10. Settings")
+    print("   0. Exit")
+    print("="*70)
+    print("\n[PRODUCTION STATUS]")
+    print("   ✅ AI Intelligence - Groq enabled")
     print("   ✅ Wake word detection - 'Hey Jarvis'")
-    print("   ✅ Memory system - Learns your preferences")
-    print("   ✅ Smart agent - Multi-step task automation")
+    print("   ✅ Continuous listening - Hands-free flow")
+    print("   ✅ Memory system - Context aware")
+    print("   ✅ Smart agent - Multi-step automation")
+    print("   ✅ Cross-device - Mobile integration")
     print("   ✅ Background service - Always running")
-    print("="*60)
-    print("\n[EXAMPLE COMMANDS]")
-    print("   - 'search [query]' - Search Google")
-    print("   - 'open chrome' - Launch Chrome browser")
-    print("   - 'prepare fintech report' - Generate report")
-    print("   - 'Remember that I like dark mode' - Save preference")
-    print("="*60 + "\n")
-    print("   - 'open chrome' - Launch Chrome browser")
-    print("   - 'tell me a joke' - Get a joke")
-    print("   - 'what time is it' - Current time")
-    print("   - 'prepare fintech report' - Generate report")
-    print("="*60 + "\n")
+    print("="*70 + "\n")
 
 def jarvis_loop():
     """Main Jarvis event loop with menu"""
@@ -129,14 +130,52 @@ def jarvis_loop():
                 speak("Entering smart agent mode")
                 smart_agent_mode()
             
+            # ========== PRODUCTION FEATURES ==========
+            elif user_input in ['11', 'continuous', 'continuous mode', 'hands-free']:
+                print("[MODE] Continuous hands-free listening (Siri-style)")
+                speak("Entering continuous listening mode. Say hey Jarvis to activate")
+                continuous_hands_free_mode()
+            
+            elif user_input in ['12', 'hybrid', 'smart execution']:
+                print("[MODE] Hybrid smart execution")
+                speak("Entering hybrid mode with intelligent task routing")
+                hybrid_smart_mode()
+            
+            elif user_input in ['13', 'api', 'api server', 'rest']:
+                print("[MODE] REST API Server for mobile control")
+                speak("Starting API server on port 5000")
+                api_server_mode()
+            
+            elif user_input in ['14', 'telegram', 'telegram bot']:
+                print("[MODE] Telegram bot interface")
+                speak("Starting Telegram bot")
+                telegram_mode()
+            
+            elif user_input in ['15', 'service', 'background', 'auto-start']:
+                print("[MODE] Background service setup")
+                speak("Setting up background service")
+                install_background_service()
+            
+            elif user_input in ['16', 'gui', 'floating', 'window']:
+                print("[MODE] Floating Siri-style GUI")
+                speak("Starting floating window")
+                floating_gui_mode()
+            
+            # ========== UTILITIES ==========
             elif user_input in ['8', 'help', 'show', 'commands']:
                 from voice.listen import voice_command_reference
                 voice_command_reference()
             
-            elif user_input in ['9', 'settings', 'config', 'preferences']:
+            elif user_input in ['9', 'memory', 'preferences', 'recall']:
+                print("[MEMORY] Your saved preferences:")
+                prefs = get_user_preferences()
+                for key, value in prefs.items():
+                    print(f"  • {key}: {value}")
+            
+            elif user_input in ['10', 'settings', 'config', 'preferences']:
                 settings_menu()
             
-            elif user_input in ['10', 'exit', 'quit', 'stop', 'goodbye']:
+            elif user_input in ['0', 'exit', 'quit', 'stop', 'goodbye']:
                 speak("Shutting down. Goodbye!")
                 break
             
@@ -330,6 +369,120 @@ def settings_menu():
         speak(f"Memory contains {memory.collection.count()} items")
     
     print()
+
+
+# ========== PRODUCTION MODE HANDLERS ==========
+
+def continuous_hands_free_mode():
+    """Continuous Siri-style hands-free listening"""
+    try:
+        from voice.continuous_mode import continuous_wake_word_mode
+        continuous_wake_word_mode()
+    except ImportError:
+        print("[ERROR] Continuous mode not available")
+        speak("Continuous mode not available")
+    except Exception as e:
+        print(f"[ERROR] {e}")
+        speak(f"Error: {e}")
+
+
+def hybrid_smart_mode():
+    """Hybrid execution with intelligent routing"""
+    try:
+        from voice.continuous_mode import smart_hybrid_mode
+        smart_hybrid_mode()
+    except ImportError:
+        print("[ERROR] Hybrid mode not available")
+        speak("Hybrid mode not available")
+    except Exception as e:
+        print(f"[ERROR] {e}")
+        speak(f"Error: {e}")
+
+
+def api_server_mode():
+    """REST API server for mobile control"""
+    try:
+        from integrations.cross_device import setup_cross_device
+        setup_cross_device(mode="api", host="0.0.0.0", port=5000)
+    except ImportError:
+        print("[ERROR] REST API not available. Install: pip install fastapi uvicorn")
+        speak("API server not available")
+    except Exception as e:
+        print(f"[ERROR] {e}")
+        speak(f"Error: {e}")
+
+
+def telegram_mode():
+    """Telegram bot interface for mobile control"""
+    try:
+        token = input("[INPUT] Enter your Telegram Bot Token: ").strip()
+        if not token:
+            speak("Token required for Telegram bot")
+            return
+        
+        from integrations.cross_device import telegram_bot_server
+        telegram_bot_server(token)
+    except ImportError:
+        print("[ERROR] Telegram bot not available. Install: pip install pyTelegramBotAPI")
+        speak("Telegram bot not available")
+    except Exception as e:
+        print(f"[ERROR] {e}")
+        speak(f"Error: {e}")
+
+
+def install_background_service():
+    """Install background service for auto-start"""
+    try:
+        from service_runner import install_service
+        if install_service():
+            speak("Background service installed successfully")
+            print("[OK] Service installed. Jarvis will auto-start on boot.")
+        else:
+            speak("Service installation failed")
+            print("[ERROR] Service installation failed")
+    except Exception as e:
+        print(f"[ERROR] {e}")
+        speak(f"Error: {e}")
+
+
+def floating_gui_mode():
+    """Start floating Siri-style GUI"""
+    try:
+        print("[INFO] Checking for PyQt5...")
+        
+        try:
+            from ui.floating_window import start_floating_ui
+            ui = start_floating_ui()
+            speak("Floating GUI started")
+            print("[OK] Floating window started. Commands from here now...")
+            
+            # Keep listening
+            while True:
+                pass
+        
+        except ImportError:
+            print("[INFO] PyQt5 not installed. Starting terminal UI instead...")
+            from ui.floating_window import SimpleFloatingUI
+            ui = SimpleFloatingUI()
+            speak("Starting terminal interface")
+            
+            while True:
+                cmd = input("[COMMAND] ").strip()
+                if cmd.lower() in ['exit', 'stop']:
+                    break
+                
+                response = execute(cmd)
+                if response:
+                    ui.update_state("speaking")
+                    speak(response)
+                    ui.update_state("ready")
+    
+    except KeyboardInterrupt:
+        print("\n[EXIT] Floating GUI closed")
+        speak("GUI closed")
+    except Exception as e:
+        print(f"[ERROR] {e}")
+        speak(f"Error: {e}")
 
 def main():
     """Main entry point"""

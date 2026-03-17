@@ -7,8 +7,8 @@ import os
 
 # Option 1: Groq API (FREE - Recommended) ⭐
 # Sign up: https://console.groq.com
-USE_GROQ = False
-GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+USE_GROQ = True  # ✅ PRODUCTION: Enabled for intelligence
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "gsk_your_api_key_here")  # Add your key here
 
 # Option 2: OpenAI API (PAID - Optional)
 USE_OPENAI = False
@@ -25,7 +25,7 @@ USE_HUGGINGFACE = False
 HUGGINGFACE_API_KEY = os.getenv("HUGGINGFACE_API_KEY", "")
 
 # Option 5: No AI (Just command routing - works offline)
-USE_NO_AI = True  # Set to True for testing - works immediately!
+USE_NO_AI = False  # ✅ PRODUCTION: Disabled - use AI instead
 
 # ===================================================
 
